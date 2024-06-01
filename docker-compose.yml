@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: movie_catalog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mkstest
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+
+  redis:
+    image: redis:6
+    networks:
+      - backend
+
+  app:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mkstest
+      POSTGRES_DB: movie_catalog
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend
+
+volumes:
+  postgres-data:
+
+networks:
+  backend:
