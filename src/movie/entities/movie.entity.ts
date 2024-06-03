@@ -1,22 +1,28 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger'
 
 @Entity()
 export class Movie {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty()
   @Column()
   titulo: string;
 
+  @ApiProperty()
   @Column()
-  descrição: string;
+  descricao: string;
 
+  @ApiProperty()
   @Column()
   diretor: string;
 
+  @ApiProperty()
   @Column()
-  dataDeLançamento: string;
+  dataDeLancamento: string;
 
-  @Column()
+  @ApiProperty()
+  @Column({nullable:true})
   postDofilme:string;
 }

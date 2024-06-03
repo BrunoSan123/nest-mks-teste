@@ -39,7 +39,9 @@ export class MovieService {
     }
 
     async createMovies(movie:Movie,posterPath:string):Promise<Movie>{
-        const savedMovie=await this.movieRepository.save({...movie,posterPath});
+        console.log(movie);
+        movie.postDofilme=posterPath;
+        const savedMovie=await this.movieRepository.save(movie);
         await this.redis.set(`movie:${savedMovie.id}`, JSON.stringify(savedMovie));
         return savedMovie;
     }
@@ -50,6 +52,7 @@ export class MovieService {
             throw new NotFoundException(`Filme com o id ${id} não foi encontrado`);
         }else{
             const movieToUpdate=await this.movieRepository.update(id,movie);
+            const redisToUpdate=await this.redis.set(`movie:${id}`,JSON.stringify(movie));
             return movieToUpdate;
         }
 
@@ -61,6 +64,7 @@ export class MovieService {
             throw new NotFoundException(`Filme com o id ${id} não foi encontrado`);
         }else{
             await this,this.movieRepository.delete(id);
+            await this.redis.del(`movie:${id}`);
             return 'Filme deletado com sucesso'
         }
     }
