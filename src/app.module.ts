@@ -17,7 +17,7 @@ import { AdminModule } from './admin/admin.module';
       password: process.env.POSTGRES_PASSWORD || 'mkstest',
       database: process.env.POSTGRES_DB || 'movie_catalog',
       autoLoadEntities: true,
-      synchronize: true, // Não usar em produção
+      synchronize: false, // Não usar em produção
     }),
 
     RedisModule.forRoot({
